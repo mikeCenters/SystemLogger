@@ -21,7 +21,7 @@ import PackageDescription
 let package = Package(
     name: "YourProject",
     dependencies: [
-        .package(url: "https://github.com/yourusername/SystemLogger.git", from: "1.0.0")
+        .package(url: "https://github.com/mikeCenters/SystemLogger", from: "1.0.0")
     ],
     targets: [
         .target(
