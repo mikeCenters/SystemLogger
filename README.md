@@ -29,3 +29,80 @@ let package = Package(
             dependencies: ["SystemLogger"]),
     ]
 )
+```
+
+After adding the dependency, you can run swift package update to fetch the SystemLogger package.
+
+# Usage
+
+## Basic Setup
+
+You can initialize a logger by specifying a custom subsystem and category, or let it default to your app’s bundle identifier.
+
+```swift
+import SystemLogger
+
+let logger = SystemLogger(subsystem: "com.example.myapp", category: "Networking")
+logger.logInfo("Network request started")
+```
+
+If you don’t provide a subsystem, SystemLogger defaults to your app’s main bundle identifier.
+
+```swift
+let defaultLogger = SystemLogger()
+defaultLogger.logInfo("App launched successfully")
+```
+
+# Log Levels
+
+You can log messages at different levels of severity:
+
+## Info
+
+```swift
+logger.logInfo("User successfully logged in")
+```
+
+## Debug
+```swift
+logger.logDebug("Debugging the login process")
+```
+
+## Warning
+```swift
+logger.logWarning("Low disk space warning")
+```
+
+## Error
+```swift
+logger.logError("Failed to load user data")
+```
+
+## Critical(Fault)
+```swift
+logger.logCritical("App crashed due to unhandled exception")
+````
+
+## Privacy-Aware Logging
+
+For sensitive information, SystemLogger supports privacy-aware logging, ensuring that private data is redacted in system logs:
+
+```swift
+logger.logPrivate("User email: example@example.com")
+```
+
+## Singleton Access
+
+You can also use a shared instance of SystemLogger throughout your app:
+
+```swift
+SystemLogger.main.logInfo("Logging from shared instance")
+```
+
+# Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request if you want to make improvements or add new features.
+
+# License
+
+SystemLogger is available under the MIT license. See the [LICENSE](https://github.com/mikeCenters/SystemLogger/blob/main/LICENSE) file for more info.
