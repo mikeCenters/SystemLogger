@@ -5,6 +5,7 @@
 //  Created by Mike Centers on 9/23/24.
 //
 
+import Foundation
 import os
 
 // MARK: - System Logger
@@ -25,16 +26,32 @@ import os
 ///
 /// ## Example Usage:
 /// ```swift
-/// let logger = SystemLogger(subsystem: "com.example.myapp", category: "General")
-/// logger.logInfo("This is an informational message.")
-/// logger.logError("An error occurred in the application.")
+/// SystemLogger.main.logInfo("This is an informational message.")
+/// SystemLogger.main.logError("An error occurred in the application.")
 /// ```
 ///
-/// The `SystemLogger` is designed to be used throughout the app by creating an instance
-/// with the desired subsystem and category, making it easily accessible without needing to
-/// instantiate multiple loggers.
+/// The `SystemLogger` is designed to be used throughout the app by utilizing its shared `main` instance,
+/// making it easily accessible without needing to instantiate multiple loggers.
+///
+/// ### Main Instance:
+/// The `SystemLogger.main` is the central logging instance for the entire app, offering a simple way to log messages
+/// without explicitly creating a new instance of the logger. The default subsystem is the application's bundle identifier.
+///
+/// ### Default Subsystem:
+/// If no `subsystem` is provided, the logger defaults to the application's main bundle identifier.
+/// For example, if the app's bundle identifier is `com.example.myapp`, the logger will use this
+/// identifier as the default subsystem:
+/// ```swift
+/// SystemLogger.main.logInfo("Default subsystem used for logging.")
+/// ```
 
 final public class SystemLogger: Sendable {
+    
+    // MARK: - Instances
+    
+    /// The main shared instance of `SystemLogger`, providing a simple access point for logging throughout the app.
+    public static let main = SystemLogger()
+    
     
     // MARK: - Properties
     
@@ -54,9 +71,10 @@ final public class SystemLogger: Sendable {
     /// identifier, while the category can represent a specific area of the app (e.g., networking,
     /// UI, or database operations).
     ///
+    /// If no `subsystem` is provided, it defaults to the app's main bundle identifier (`Bundle.main.bundleIdentifier`).
+    ///
     /// - Parameters:
-    ///   - subsystem: The identifier for the app or module generating the log. It can be
-    ///     overridden to provide a specific subsystem identifier.
+    ///   - subsystem: The identifier for the app or module generating the log. Defaults to the main bundle identifier.
     ///   - category: A string used to categorize logs within the subsystem. Defaults to `"default"`.
     ///
     /// ### Example:
@@ -64,7 +82,7 @@ final public class SystemLogger: Sendable {
     /// let customLogger = SystemLogger(subsystem: "com.example.myapp.network", category: "Networking")
     /// customLogger.logInfo("Network request started")
     /// ```
-    public init(subsystem: String, category: String = "default") {
+    public init(subsystem: String = Bundle.main.bundleIdentifier ?? "com.systemlogger.default", category: String = "default") {
         logger = Logger(subsystem: subsystem, category: category)
     }
     
@@ -81,8 +99,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logInfo("User logged in successfully")
+    /// SystemLogger.main.logInfo("User logged in successfully")
     /// ```
     public func logInfo(_ message: String) {
         logger.info("\(message, privacy: .public)")
@@ -98,8 +115,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logDebug("Debugging user authentication process")
+    /// SystemLogger.main.logDebug("Debugging user authentication process")
     /// ```
     public func logDebug(_ message: String) {
         logger.debug("\(message, privacy: .public)")
@@ -115,8 +131,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logWarning("Low disk space detected")
+    /// SystemLogger.main.logWarning("Low disk space detected")
     /// ```
     public func logWarning(_ message: String) {
         logger.warning("\(message, privacy: .public)")
@@ -131,8 +146,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logError("Failed to load user profile data")
+    /// SystemLogger.main.logError("Failed to load user profile data")
     /// ```
     public func logError(_ message: String) {
         logger.error("\(message, privacy: .public)")
@@ -151,8 +165,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logCritical("App crashed due to an unhandled exception")
+    /// SystemLogger.main.logCritical("App crashed due to an unhandled exception")
     /// ```
     public func logCritical(_ message: String) {
         logger.fault("\(message, privacy: .public)")
@@ -168,8 +181,7 @@ final public class SystemLogger: Sendable {
     ///
     /// ### Example:
     /// ```swift
-    /// let logger = SystemLogger(subsystem: "com.example.myapp")
-    /// logger.logPrivate("User email: example@example.com")
+    /// SystemLogger.main.logPrivate("User email: example@example.com")
     /// ```
     public func logPrivate(_ message: String) {
         logger.log("\(message, privacy: .private)")
