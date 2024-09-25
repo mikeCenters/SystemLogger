@@ -3,7 +3,7 @@ import Testing
 
 // MARK: - Logger
 
-let logger = SystemLogger(subsystem: "com.SystemLogger.Tests", category: "SystemLoggerTests")
+let logger = SystemLogger.shared
 
 
 // MARK: - Tests
